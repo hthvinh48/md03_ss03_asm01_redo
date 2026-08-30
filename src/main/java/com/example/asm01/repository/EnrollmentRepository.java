@@ -21,7 +21,7 @@ public class EnrollmentRepository {
         return enrollments.stream().filter(e -> e.getId() == id).findFirst().orElse(null);
     }
 
-    public Enrollment insert(Enrollment enrollment) {
+    public Enrollment create(Enrollment enrollment) {
         enrollments.add(enrollment);
         return enrollment;
     }
@@ -38,7 +38,7 @@ public class EnrollmentRepository {
         return currentEnrollment;
     }
 
-    public Enrollment delete(long id) {
+    public Enrollment deleteById(long id) {
         Enrollment currentEnrollment = findById(id);
 
         if (currentEnrollment == null) {

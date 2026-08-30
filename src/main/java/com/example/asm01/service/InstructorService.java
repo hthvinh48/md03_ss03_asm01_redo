@@ -14,25 +14,29 @@ public class InstructorService {
         this.instructorRepository = instructorRepository;
     }
 
-    public List<Instructor> findAll() {
+    public List<Instructor> getAllInstructors() {
         return instructorRepository.findAll();
     }
 
+    public Instructor getInstructorById(long id) {
+        return instructorRepository.findById(id);
+    }
+
     public long findMaxId() {
-        List<Instructor> instructors = this.findAll();
+        List<Instructor> instructors = this.getAllInstructors();
         return instructors.stream().mapToLong(Instructor::getId).max().orElse(0);
     }
 
-    public Instructor insert(Instructor instructor) {
+    public Instructor createInstructor(Instructor instructor) {
         instructor.setId(findMaxId() + 1);
-        return instructorRepository.insert(instructor);
+        return instructorRepository.create(instructor);
     }
 
-    public Instructor update(long id, Instructor instructor) {
+    public Instructor updateInstructor(long id, Instructor instructor) {
         return instructorRepository.update(id, instructor);
     }
 
-    public Instructor delete(long id) {
-        return instructorRepository.delete(id);
+    public Instructor deleteInstructorById(long id) {
+        return instructorRepository.deleteById(id);
     }
 }

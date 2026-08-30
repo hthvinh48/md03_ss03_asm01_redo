@@ -14,27 +14,27 @@ public class EnrollmentService {
         this.enrollmentRepository = enrollmentRepository;
     }
 
-    public List<Enrollment> findAll() {
+    public List<Enrollment> getAllEnrollments() {
         return enrollmentRepository.findAll();
     }
 
     public long findMaxId() {
-        return findAll().stream()
+        return getAllEnrollments().stream()
                 .mapToLong(Enrollment::getId)
                 .max()
                 .orElse(0);
     }
 
-    public Enrollment insert(Enrollment enrollment) {
+    public Enrollment createEnrollment(Enrollment enrollment) {
         enrollment.setId(findMaxId() + 1);
-        return enrollmentRepository.insert(enrollment);
+        return enrollmentRepository.create(enrollment);
     }
 
-    public Enrollment update(long id, Enrollment enrollment) {
+    public Enrollment updateEnrollment(long id, Enrollment enrollment) {
         return enrollmentRepository.update(id, enrollment);
     }
 
-    public Enrollment delete(long id) {
-        return enrollmentRepository.delete(id);
+    public Enrollment deleteEnrollmentById(long id) {
+        return enrollmentRepository.deleteById(id);
     }
 }

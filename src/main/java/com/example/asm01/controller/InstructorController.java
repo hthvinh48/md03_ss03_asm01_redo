@@ -1,6 +1,5 @@
 package com.example.asm01.controller;
 
-import com.example.asm01.model.Course;
 import com.example.asm01.model.Instructor;
 import com.example.asm01.service.InstructorService;
 import org.springframework.http.ResponseEntity;
@@ -19,19 +18,30 @@ public class InstructorController {
 
     @GetMapping
     public ResponseEntity<List<Instructor>> findAll() {
-        List<Instructor> instructors = instructorService.findAll();
+        List<Instructor> instructors = instructorService.getAllInstructors();
         return ResponseEntity.ok(instructors);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Instructor> findById(@PathVariable long id) {
+        Instructor instructor = instructorService.getInstructorById(id);
+
+        if (instructor == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(instructor);
     }
 
     @PostMapping
     public ResponseEntity<Instructor> insert(@RequestBody Instructor instructor) {
-        Instructor newInstructor = instructorService.insert(instructor);
+        Instructor newInstructor = instructorService.createInstructor(instructor);
         return ResponseEntity.ok(newInstructor);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Instructor> update(@PathVariable long id, @RequestBody Instructor instructor) {
-        Instructor updatedInstructor = instructorService.update(id, instructor);
+        Instructor updatedInstructor = instructorService.updateInstructor(id, instructor);
 
         if (updatedInstructor == null) return ResponseEntity.notFound().build();
 
@@ -40,7 +50,7 @@ public class InstructorController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Instructor> delete(@PathVariable long id) {
-        Instructor instructor = instructorService.delete(id);
+        Instructor instructor = instructorService.deleteInstructorById(id);
 
         if (instructor == null) return ResponseEntity.notFound().build();
 

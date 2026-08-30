@@ -21,7 +21,7 @@ public class CourseRepository {
         return courses.stream().filter(c -> c.getId() == id).findFirst().orElse(null);
     }
 
-    public Course insert(Course course) {
+    public Course create(Course course) {
         courses.add(course);
         return course;
     }
@@ -39,7 +39,7 @@ public class CourseRepository {
         return currentCourse;
     }
 
-    public Course delete(long id) {
+    public Course deleteById(long id) {
         Course currentCourse = findById(id);
 
         if (currentCourse == null) {

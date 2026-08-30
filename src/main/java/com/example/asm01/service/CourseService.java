@@ -14,25 +14,29 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    public List<Course> findAll() {
+    public List<Course> getAllCourses() {
         return courseRepository.findAll();
     }
 
+    public Course getCourseById(long id) {
+        return courseRepository.findById(id);
+    }
+
     public long findMaxId() {
-        List<Course> courses = this.findAll();
+        List<Course> courses = this.getAllCourses();
         return courses.stream().mapToLong(Course::getId).max().orElse(0);
     }
 
-    public Course insert(Course course) {
+    public Course createCourse(Course course) {
         course.setId(findMaxId() + 1);
-        return courseRepository.insert(course);
+        return courseRepository.create(course);
     }
 
-    public Course update(long id, Course course) {
+    public Course updateCourse(long id, Course course) {
         return courseRepository.update(id, course);
     }
 
-    public Course delete(long id) {
-        return courseRepository.delete(id);
+    public Course deleteCourseById(long id) {
+        return courseRepository.deleteById(id);
     }
 }

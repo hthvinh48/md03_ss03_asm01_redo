@@ -21,7 +21,7 @@ public class InstructorRepository {
         return instructors.stream().filter(i -> i.getId() == id).findFirst().orElse(null);
     }
 
-    public Instructor insert(Instructor instructor) {
+    public Instructor create(Instructor instructor) {
         instructors.add(instructor);
         return instructor;
     }
@@ -38,7 +38,7 @@ public class InstructorRepository {
         return currentInstructor;
     }
 
-    public Instructor delete(long id) {
+    public Instructor deleteById(long id) {
         Instructor currentInstructor = findById(id);
 
         if (currentInstructor == null) {

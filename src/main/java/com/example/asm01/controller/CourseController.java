@@ -18,19 +18,30 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<List<Course>> findAll() {
-        List<Course> courses = courseService.findAll();
+        List<Course> courses = courseService.getAllCourses();
         return ResponseEntity.ok(courses);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Course> findById(@PathVariable long id) {
+        Course course = courseService.getCourseById(id);
+
+        if (course == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(course);
     }
 
     @PostMapping
     public ResponseEntity<Course> insert(@RequestBody Course course) {
-        Course newCourse = courseService.insert(course);
+        Course newCourse = courseService.createCourse(course);
         return ResponseEntity.ok(newCourse);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Course> update(@PathVariable long id, @RequestBody Course course) {
-        Course updatedCourse = courseService.update(id, course);
+        Course updatedCourse = courseService.updateCourse(id, course);
 
         if (updatedCourse == null) return ResponseEntity.notFound().build();
 
@@ -39,7 +50,7 @@ public class CourseController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Course> delete(@PathVariable long id) {
-        Course course = courseService.delete(id);
+        Course course = courseService.deleteCourseById(id);
 
         if (course == null) return ResponseEntity.notFound().build();
 

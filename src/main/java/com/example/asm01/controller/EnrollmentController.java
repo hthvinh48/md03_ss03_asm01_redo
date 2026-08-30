@@ -18,19 +18,19 @@ public class EnrollmentController {
 
     @GetMapping
     public ResponseEntity<List<Enrollment>> findAll() {
-        List<Enrollment> enrollments = enrollmentService.findAll();
+        List<Enrollment> enrollments = enrollmentService.getAllEnrollments();
         return ResponseEntity.ok(enrollments);
     }
 
     @PostMapping
     public ResponseEntity<Enrollment> save(@RequestBody Enrollment enrollment) {
-        Enrollment result = enrollmentService.insert(enrollment);
+        Enrollment result = enrollmentService.createEnrollment(enrollment);
         return ResponseEntity.ok(result);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<Enrollment> update(@PathVariable Long id, @RequestBody Enrollment enrollment) {
-        Enrollment result = enrollmentService.update(id, enrollment);
+        Enrollment result = enrollmentService.updateEnrollment(id, enrollment);
 
         if (result == null) {
             return ResponseEntity.notFound().build();
@@ -41,7 +41,7 @@ public class EnrollmentController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Enrollment> delete(@PathVariable Long id) {
-        Enrollment result = enrollmentService.delete(id);
+        Enrollment result = enrollmentService.deleteEnrollmentById(id);
 
         if (result == null) {
             return ResponseEntity.notFound().build();
