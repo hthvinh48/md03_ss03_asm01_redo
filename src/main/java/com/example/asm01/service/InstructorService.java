@@ -1,6 +1,5 @@
 package com.example.asm01.service;
 
-import com.example.asm01.model.Course;
 import com.example.asm01.model.Instructor;
 import com.example.asm01.repository.InstructorRepository;
 import org.springframework.stereotype.Service;
@@ -16,12 +15,12 @@ public class InstructorService {
     }
 
     public List<Instructor> findAll() {
-        return instructorRepository.getInstructors();
+        return instructorRepository.findAll();
     }
 
     public long findMaxId() {
         List<Instructor> instructors = this.findAll();
-        return instructors.stream().mapToLong(Instructor::getId).max().orElse(1);
+        return instructors.stream().mapToLong(Instructor::getId).max().orElse(0);
     }
 
     public Instructor insert(Instructor instructor) {

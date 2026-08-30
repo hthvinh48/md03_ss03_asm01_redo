@@ -15,12 +15,12 @@ public class CourseService {
     }
 
     public List<Course> findAll() {
-        return courseRepository.getCourses();
+        return courseRepository.findAll();
     }
 
     public long findMaxId() {
         List<Course> courses = this.findAll();
-        return courses.stream().mapToLong(Course::getId).max().orElse(1);
+        return courses.stream().mapToLong(Course::getId).max().orElse(0);
     }
 
     public Course insert(Course course) {

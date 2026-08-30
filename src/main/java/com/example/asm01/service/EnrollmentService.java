@@ -15,43 +15,26 @@ public class EnrollmentService {
     }
 
     public List<Enrollment> findAll() {
-        return enrollmentRepository.getEnrollments();
+        return enrollmentRepository.findAll();
     }
 
     public long findMaxId() {
         return findAll().stream()
                 .mapToLong(Enrollment::getId)
                 .max()
-                .orElse(1);
+                .orElse(0);
     }
 
     public Enrollment insert(Enrollment enrollment) {
         enrollment.setId(findMaxId() + 1);
-        enrollment.setStudentName(enrollment.getStudentName());
-        enrollment.setCourseId(enrollment.getCourseId());
         return enrollmentRepository.insert(enrollment);
     }
 
     public Enrollment update(long id, Enrollment enrollment) {
-        Enrollment currentEnrollment = enrollmentRepository.findById(id);
-
-        if (currentEnrollment == null) {
-            return null;
-        }
-
-        currentEnrollment.setStudentName(enrollment.getStudentName());
-        currentEnrollment.setCourseId(enrollment.getCourseId());
-        return currentEnrollment;
+        return enrollmentRepository.update(id, enrollment);
     }
 
     public Enrollment delete(long id) {
-        Enrollment currentEnrollment = enrollmentRepository.findById(id);
-
-        if (currentEnrollment == null) {
-            return null;
-        }
-
-        enrollmentRepository.delete(currentEnrollment);
-        return currentEnrollment;
+        return enrollmentRepository.delete(id);
     }
 }

@@ -1,19 +1,21 @@
 package com.example.asm01.repository;
 
 import com.example.asm01.model.Course;
-import lombok.Getter;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
 @Repository
 public class CourseRepository {
     private final List<Course> courses = new ArrayList<>(List.of(
             new Course(1, "Java Fundamental - JDBC", "Closing", 1),
             new Course(2, "Java Spring Web - Restful API", "Opening", 2)
     ));
+
+    public List<Course> findAll() {
+        return new ArrayList<>(courses);
+    }
 
     public Course findById(long id) {
         return courses.stream().filter(c -> c.getId() == id).findFirst().orElse(null);
