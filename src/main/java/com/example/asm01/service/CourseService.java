@@ -19,7 +19,9 @@ public class CourseService {
     }
 
     public Course getCourseById(long id) {
-        return courseRepository.findById(id);
+        return courseRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Course with id " + id + " not found!")
+        );
     }
 
     public long findMaxId() {

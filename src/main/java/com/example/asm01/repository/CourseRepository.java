@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class CourseRepository {
@@ -17,8 +18,8 @@ public class CourseRepository {
         return new ArrayList<>(courses);
     }
 
-    public Course findById(long id) {
-        return courses.stream().filter(c -> c.getId() == id).findFirst().orElse(null);
+    public Optional<Course> findById(long id) {
+        return courses.stream().filter(c -> c.getId() == id).findFirst();
     }
 
     public Course create(Course course) {
@@ -27,26 +28,22 @@ public class CourseRepository {
     }
 
     public Course update(long id, Course course) {
-        Course currentCourse = findById(id);
+        Course existing = findById(id).orElseThrow(() ->
+                new RuntimeException("Course with id: " + id + " not found")
+        );
 
-        if (currentCourse == null) {
-            return null;
-        }
-
-        currentCourse.setTitle(course.getTitle());
-        currentCourse.setStatus(course.getStatus());
-        currentCourse.setInstructorId(course.getInstructorId());
-        return currentCourse;
+        existing.setTitle(course.getTitle());
+        existing.setStatus(course.getStatus());
+        existing.setInstructorId(course.getInstructorId());
+        return existing;
     }
 
     public Course deleteById(long id) {
-        Course currentCourse = findById(id);
+        Course existing = findById(id).orElseThrow(() ->
+                new RuntimeException("Course with id: " + id + " not found")
+        );
 
-        if (currentCourse == null) {
-            return null;
-        }
-
-        courses.remove(currentCourse);
-        return currentCourse;
+        courses.remove(existing);
+        return existing;
     }
 }

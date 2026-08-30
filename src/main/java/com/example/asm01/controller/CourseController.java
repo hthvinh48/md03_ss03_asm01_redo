@@ -31,15 +31,17 @@ public class CourseController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<Course>> findById(@PathVariable long id) {
-        Course course = courseService.getCourseById(id);
-
-        if (course == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(false, "course not found", null)
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true, "fetched course successfully", courseService.getCourseById(id)
+                    )
             );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+                    false, e.getMessage(), null
+            ));
         }
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "course found", course));
     }
 
     @PostMapping
@@ -52,27 +54,31 @@ public class CourseController {
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<Course>> update(@PathVariable long id, @RequestBody Course course) {
-        Course updatedCourse = courseService.updateCourse(id, course);
-
-        if (updatedCourse == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(false, "course not found", null)
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true, "updated course successfully", courseService.updateCourse(id, course)
+                    )
             );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+                    false, e.getMessage(), null
+            ));
         }
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "course updated", updatedCourse));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Course>> delete(@PathVariable long id) {
-        Course course = courseService.deleteCourseById(id);
-
-        if (course == null) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(false, "course not found", null)
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true, "deleted course successfully", courseService.deleteCourseById(id)
+                    )
             );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse<>(
+                    false, e.getMessage(), null
+            ));
         }
-
-        return ResponseEntity.ok(new ApiResponse<>(true, "course deleted", course));
     }
 }
