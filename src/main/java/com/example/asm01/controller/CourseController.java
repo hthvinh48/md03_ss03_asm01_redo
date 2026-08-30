@@ -1,7 +1,9 @@
 package com.example.asm01.controller;
 
 import com.example.asm01.model.Course;
+import com.example.asm01.response.ApiResponse;
 import com.example.asm01.service.CourseService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,43 +19,60 @@ public class CourseController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Course>> findAll() {
+    public ResponseEntity<ApiResponse<List<Course>>> findAll() {
         List<Course> courses = courseService.getAllCourses();
-        return ResponseEntity.ok(courses);
+
+        ApiResponse<List<Course>> apiResponse = new ApiResponse<>(
+                true, "fetched courses successfully", courses
+        );
+
+        return ResponseEntity.ok(apiResponse);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Course> findById(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<Course>> findById(@PathVariable long id) {
         Course course = courseService.getCourseById(id);
 
         if (course == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse<>(false, "course not found", null)
+            );
         }
 
-        return ResponseEntity.ok(course);
+        return ResponseEntity.ok(new ApiResponse<>(true, "course found", course));
     }
 
     @PostMapping
-    public ResponseEntity<Course> insert(@RequestBody Course course) {
+    public ResponseEntity<ApiResponse<Course>> insert(@RequestBody Course course) {
         Course newCourse = courseService.createCourse(course);
-        return ResponseEntity.ok(newCourse);
+        return ResponseEntity.status(HttpStatus.CREATED).body(
+                new ApiResponse<>(true, "course created", newCourse)
+        );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Course> update(@PathVariable long id, @RequestBody Course course) {
+    public ResponseEntity<ApiResponse<Course>> update(@PathVariable long id, @RequestBody Course course) {
         Course updatedCourse = courseService.updateCourse(id, course);
 
-        if (updatedCourse == null) return ResponseEntity.notFound().build();
+        if (updatedCourse == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse<>(false, "course not found", null)
+            );
+        }
 
-        return ResponseEntity.ok(updatedCourse);
+        return ResponseEntity.ok(new ApiResponse<>(true, "course updated", updatedCourse));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Course> delete(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<Course>> delete(@PathVariable long id) {
         Course course = courseService.deleteCourseById(id);
 
-        if (course == null) return ResponseEntity.notFound().build();
+        if (course == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse<>(false, "course not found", null)
+            );
+        }
 
-        return ResponseEntity.ok(course);
+        return ResponseEntity.ok(new ApiResponse<>(true, "course deleted", course));
     }
 }
