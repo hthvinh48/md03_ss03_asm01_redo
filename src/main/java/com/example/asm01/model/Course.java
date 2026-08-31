@@ -10,10 +10,10 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Course {
-    private long id;
+    private Long id;
     private String title;
     private String status;
-    private long instructorId;
+    private Long instructorId;
 
     public Course(String title, String status, long instructorId) {
         this.title = title;

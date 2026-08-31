@@ -10,8 +10,8 @@ import java.util.Optional;
 @Repository
 public class CourseRepository {
     private final List<Course> courses = new ArrayList<>(List.of(
-            new Course(1, "Java Fundamental - JDBC", "Closing", 1),
-            new Course(2, "Java Spring Web - Restful API", "Opening", 2)
+            new Course(1L, "Java Fundamental - JDBC", "INACTIVE", 1L),
+            new Course(2L, "Java Spring Web - Restful API", "ACTIVE", 2L)
     ));
 
     public List<Course> findAll() {

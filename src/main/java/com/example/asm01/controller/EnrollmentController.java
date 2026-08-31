@@ -1,5 +1,7 @@
 package com.example.asm01.controller;
 
+import com.example.asm01.dto.EnrollCourseRequest;
+import com.example.asm01.dto.EnrollmentDetail;
 import com.example.asm01.model.Enrollment;
 import com.example.asm01.response.ApiResponse;
 import com.example.asm01.service.EnrollmentService;
@@ -94,6 +96,29 @@ public class EnrollmentController {
             );
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ApiResponse<>(
+                            false,
+                            e.getMessage(),
+                            null
+                    )
+            );
+        }
+    }
+
+    @PostMapping("/enroll-course")
+    public ResponseEntity<ApiResponse<EnrollmentDetail>> enrollCourse
+            (@RequestBody EnrollCourseRequest enrollCourseRequest)
+    {
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true,
+                            "Enrollment successfully",
+                            enrollmentService.enrollCourse(enrollCourseRequest)
+                    )
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
                     new ApiResponse<>(
                             false,
                             e.getMessage(),
