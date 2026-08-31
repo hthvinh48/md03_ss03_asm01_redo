@@ -19,7 +19,9 @@ public class InstructorService {
     }
 
     public Instructor getInstructorById(long id) {
-        return instructorRepository.findById(id);
+        return instructorRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Instructor with id " + id + " not found")
+        );
     }
 
     public long findMaxId() {

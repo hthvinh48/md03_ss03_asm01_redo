@@ -5,6 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class InstructorRepository {
@@ -17,8 +18,8 @@ public class InstructorRepository {
         return new ArrayList<>(instructors);
     }
 
-    public Instructor findById(long id) {
-        return instructors.stream().filter(i -> i.getId() == id).findFirst().orElse(null);
+    public Optional<Instructor> findById(long id) {
+        return instructors.stream().filter(i -> i.getId() == id).findFirst();
     }
 
     public Instructor create(Instructor instructor) {
@@ -27,11 +28,9 @@ public class InstructorRepository {
     }
 
     public Instructor update(long id, Instructor instructor) {
-        Instructor currentInstructor = findById(id);
-
-        if (currentInstructor == null) {
-            return null;
-        }
+        Instructor currentInstructor = findById(id).orElseThrow(() ->
+                new RuntimeException("Instructor with id " + id + " not found")
+        );
 
         currentInstructor.setName(instructor.getName());
         currentInstructor.setEmail(instructor.getEmail());
@@ -39,11 +38,9 @@ public class InstructorRepository {
     }
 
     public Instructor deleteById(long id) {
-        Instructor currentInstructor = findById(id);
-
-        if (currentInstructor == null) {
-            return null;
-        }
+        Instructor currentInstructor = findById(id).orElseThrow(() ->
+                new RuntimeException("Instructor with id " + id + " not found")
+        );
 
         instructors.remove(currentInstructor);
         return currentInstructor;

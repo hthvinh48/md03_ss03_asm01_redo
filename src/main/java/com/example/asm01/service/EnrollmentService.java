@@ -18,6 +18,12 @@ public class EnrollmentService {
         return enrollmentRepository.findAll();
     }
 
+    public Enrollment getEnrollmentById(long id) {
+        return enrollmentRepository.findById(id).orElseThrow(() ->
+                new RuntimeException("Enrollment with id " + id + " not found.")
+        );
+    }
+
     public long findMaxId() {
         return getAllEnrollments().stream()
                 .mapToLong(Enrollment::getId)
