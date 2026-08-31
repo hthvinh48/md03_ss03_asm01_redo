@@ -1,5 +1,6 @@
 package com.example.asm01.controller;
 
+import com.example.asm01.dto.InstructorDetail;
 import com.example.asm01.model.Instructor;
 import com.example.asm01.response.ApiResponse;
 import com.example.asm01.service.InstructorService;
@@ -19,12 +20,12 @@ public class InstructorController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Instructor>>> findAll() {
+    public ResponseEntity<ApiResponse<List<InstructorDetail>>> findAll() {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
-                        "fetched data successfully",
-                        instructorService.getAllInstructors()
+                        "Fetched instructor details successfully",
+                        instructorService.getInstructorDetail()
                 )
         );
     }
