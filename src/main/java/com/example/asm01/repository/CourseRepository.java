@@ -1,6 +1,7 @@
 package com.example.asm01.repository;
 
 import com.example.asm01.model.Course;
+import com.example.asm01.model.CourseStatus;
 import org.springframework.stereotype.Repository;
 
 import java.util.ArrayList;
@@ -10,8 +11,8 @@ import java.util.Optional;
 @Repository
 public class CourseRepository {
     private final List<Course> courses = new ArrayList<>(List.of(
-            new Course(1L, "Java Fundamental - JDBC", "INACTIVE", 1L),
-            new Course(2L, "Java Spring Web - Restful API", "ACTIVE", 2L)
+            new Course(1L, "Java Fundamental - JDBC", CourseStatus.INACTIVE, 1L),
+            new Course(2L, "Java Spring Web - Restful API", CourseStatus.ACTIVE, 2L)
     ));
 
     public List<Course> findAll() {

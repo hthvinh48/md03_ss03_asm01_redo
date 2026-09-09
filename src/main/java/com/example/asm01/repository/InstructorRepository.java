@@ -10,8 +10,8 @@ import java.util.Optional;
 @Repository
 public class InstructorRepository {
     private final List<Instructor> instructors = new ArrayList<>(List.of(
-            new Instructor(1, "Cristiano Ronaldo", "cr7@gmail.com"),
-            new Instructor(2, "David Beckham", "david@gmail.com")
+            new Instructor(1L, "Cristiano Ronaldo", "cr7@gmail.com"),
+            new Instructor(2L, "David Beckham", "david@gmail.com")
     ));
 
     public List<Instructor> findAll() {
