@@ -3,7 +3,7 @@ package com.example.asm01.service;
 import com.example.asm01.dto.EnrollCourseRequest;
 import com.example.asm01.dto.EnrollmentDetail;
 import com.example.asm01.model.Course;
-import com.example.asm01.model.Enrollment;
+import com.example.asm01.model.StudentEnrollment;
 import com.example.asm01.repository.CourseRepository;
 import com.example.asm01.repository.EnrollmentRepository;
 import com.example.asm01.repository.InstructorRepository;
@@ -27,11 +27,11 @@ public class EnrollmentService {
         this.instructorRepository = instructorRepository;
     }
 
-    public List<Enrollment> getAllEnrollments() {
+    public List<StudentEnrollment> getAllEnrollments() {
         return enrollmentRepository.findAll();
     }
 
-    public Enrollment getEnrollmentById(long id) {
+    public StudentEnrollment getEnrollmentById(long id) {
         return enrollmentRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Enrollment with id " + id + " not found.")
         );
@@ -39,14 +39,14 @@ public class EnrollmentService {
 
     public long findMaxId() {
         return getAllEnrollments().stream()
-                .mapToLong(Enrollment::getId)
+                .mapToLong(StudentEnrollment::getId)
                 .max()
                 .orElse(0);
     }
 
-    public Enrollment createEnrollment(Enrollment enrollment) {
-        enrollment.setId(findMaxId() + 1);
-        return enrollmentRepository.create(enrollment);
+    public StudentEnrollment createEnrollment(StudentEnrollment studentEnrollment) {
+        studentEnrollment.setId(findMaxId() + 1);
+        return enrollmentRepository.create(studentEnrollment);
     }
 
     public EnrollmentDetail enrollCourse(EnrollCourseRequest enrollment) {
@@ -62,18 +62,18 @@ public class EnrollmentService {
                 new RuntimeException("instructor not found.")
         );
 
-        Enrollment saveEnrollment = enrollmentRepository.create(
-                new Enrollment(findMaxId() + 1, enrollment.getStudentName(), enrollment.getCourseId())
+        StudentEnrollment saveStudentEnrollment = enrollmentRepository.create(
+                new StudentEnrollment(findMaxId() + 1, enrollment.getStudentName(), enrollment.getCourseId())
         );
 
-        return new EnrollmentDetail(saveEnrollment.getId(), saveEnrollment.getStudentName(), existing);
+        return new EnrollmentDetail(saveStudentEnrollment.getId(), saveStudentEnrollment.getStudentName(), existing);
     }
 
-    public Enrollment updateEnrollment(long id, Enrollment enrollment) {
-        return enrollmentRepository.update(id, enrollment);
+    public StudentEnrollment updateEnrollment(long id, StudentEnrollment studentEnrollment) {
+        return enrollmentRepository.update(id, studentEnrollment);
     }
 
-    public Enrollment deleteEnrollmentById(long id) {
+    public StudentEnrollment deleteEnrollmentById(long id) {
         return enrollmentRepository.deleteById(id);
     }
 }

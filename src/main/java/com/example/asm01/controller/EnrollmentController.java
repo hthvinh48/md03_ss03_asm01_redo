@@ -2,7 +2,7 @@ package com.example.asm01.controller;
 
 import com.example.asm01.dto.EnrollCourseRequest;
 import com.example.asm01.dto.EnrollmentDetail;
-import com.example.asm01.model.Enrollment;
+import com.example.asm01.model.StudentEnrollment;
 import com.example.asm01.response.ApiResponse;
 import com.example.asm01.service.EnrollmentService;
 import org.springframework.http.HttpStatus;
@@ -21,7 +21,7 @@ public class EnrollmentController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<Enrollment>>> findAll() {
+    public ResponseEntity<ApiResponse<List<StudentEnrollment>>> findAll() {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
@@ -32,7 +32,7 @@ public class EnrollmentController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> findById(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> findById(@PathVariable long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
@@ -53,24 +53,24 @@ public class EnrollmentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Enrollment>> save(@RequestBody Enrollment enrollment) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> save(@RequestBody StudentEnrollment studentEnrollment) {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
                         "create new enrollment successfully",
-                        enrollmentService.createEnrollment(enrollment)
+                        enrollmentService.createEnrollment(studentEnrollment)
                 )
         );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> update(@PathVariable Long id, @RequestBody Enrollment enrollment) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> update(@PathVariable Long id, @RequestBody StudentEnrollment studentEnrollment) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
                             true,
                             "update enrollment successfully",
-                            enrollmentService.updateEnrollment(id, enrollment)
+                            enrollmentService.updateEnrollment(id, studentEnrollment)
                     )
             );
         } catch (RuntimeException e) {
@@ -85,7 +85,7 @@ public class EnrollmentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Enrollment>> delete(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(

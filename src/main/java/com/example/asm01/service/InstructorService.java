@@ -2,7 +2,7 @@ package com.example.asm01.service;
 
 import com.example.asm01.dto.InstructorDetail;
 import com.example.asm01.model.Course;
-import com.example.asm01.model.Enrollment;
+import com.example.asm01.model.StudentEnrollment;
 import com.example.asm01.model.Instructor;
 import com.example.asm01.repository.CourseRepository;
 import com.example.asm01.repository.EnrollmentRepository;
@@ -40,7 +40,7 @@ public class InstructorService {
 
     public List<InstructorDetail> getInstructorDetail() {
         List<Instructor> instructors = instructorRepository.findAll();
-        List<Enrollment> enrollments = enrollmentRepository.findAll();
+        List<StudentEnrollment> studentEnrollments = enrollmentRepository.findAll();
         List<Course> courses = courseRepository.findAll();
 
         return instructors.stream().map(
@@ -53,10 +53,10 @@ public class InstructorService {
                                     )
                             )
                             .filter(course -> "ACTIVE".equals(course.getStatus()))
-                            .filter(course -> enrollments.stream().anyMatch(enrollment ->
+                            .filter(course -> studentEnrollments.stream().anyMatch(studentEnrollment ->
                                     Objects.equals(
                                             course.getId(),
-                                            enrollment.getCourseId()
+                                            studentEnrollment.getCourseId()
                                         )
                                     )
                             ).toList();

@@ -8,23 +8,23 @@ import lombok.Setter;
 
 import java.util.List;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
-@Table(name = "instructors")
-public class Instructor {
+@Table(name = "students")
+public class Student {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false)
     private String name;
 
     @Column(nullable = false)
     private String email;
 
-    @OneToMany(mappedBy = "instructor")
-    private List<Course> courses;
+    @OneToMany(mappedBy = "student")
+    List<StudentEnrollment> enrollments;
 }
