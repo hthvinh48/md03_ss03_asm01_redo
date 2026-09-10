@@ -1,5 +1,6 @@
 package com.example.asm01.controller;
 
+import com.example.asm01.dto.InstructorCreateRequest;
 import com.example.asm01.dto.InstructorDetail;
 import com.example.asm01.model.Instructor;
 import com.example.asm01.response.ApiResponse;
@@ -20,7 +21,7 @@ public class InstructorController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<InstructorDetail>>> findAll() {
+    public ResponseEntity<ApiResponse<List<InstructorDetail>>> findAllInstructors() {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
@@ -31,39 +32,38 @@ public class InstructorController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Instructor>> findById(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<Instructor>> findInstructorById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
                             true,
                             "get data successfully",
-                            instructorService.getInstructorById(id)
+                            instructorService.findInstructorById(id)
                     )
             );
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(
-                            false,
-                            e.getMessage(),
-                            null
-                    )
+                    new ApiResponse<>(false, e.getMessage(), null)
             );
         }
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<Instructor>> insert(@RequestBody Instructor instructor) {
-        return ResponseEntity.ok(
+    public ResponseEntity<ApiResponse<Instructor>> createInstructor(@RequestBody InstructorCreateRequest instructor) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(
                 new ApiResponse<>(
                         true,
-                        "create a new instuctor successfully",
+                        "created instructor successfully",
                         instructorService.createInstructor(instructor)
                 )
         );
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Instructor>> update(@PathVariable long id, @RequestBody Instructor instructor) {
+    public ResponseEntity<ApiResponse<Instructor>> updateInstructor(
+            @PathVariable Long id,
+            @RequestBody Instructor instructor
+    ) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
@@ -74,17 +74,13 @@ public class InstructorController {
             );
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(
-                            false,
-                            e.getMessage(),
-                            null
-                    )
+                    new ApiResponse<>(false, e.getMessage(),null)
             );
         }
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Instructor>> delete(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<Instructor>> deleteInstructor(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
@@ -95,11 +91,7 @@ public class InstructorController {
             );
         } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ApiResponse<>(
-                            false,
-                            e.getMessage(),
-                            null
-                    )
+                    new ApiResponse<>(false, e.getMessage(),null)
             );
         }
     }

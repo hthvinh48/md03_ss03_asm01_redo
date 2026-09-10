@@ -1,6 +1,5 @@
 package com.example.asm01.controller;
 
-import com.example.asm01.dto.EnrollCourseRequest;
 import com.example.asm01.dto.EnrollmentDetail;
 import com.example.asm01.model.StudentEnrollment;
 import com.example.asm01.response.ApiResponse;
@@ -26,19 +25,19 @@ public class EnrollmentController {
                 new ApiResponse<>(
                         true,
                         "fetched data successfully",
-                        enrollmentService.getAllEnrollments()
+                        enrollmentService.findAllEnrollments()
                 )
         );
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<StudentEnrollment>> findById(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> findById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
                             true,
                             "fetched data successfully",
-                            enrollmentService.getEnrollmentById(id)
+                            enrollmentService.findEnrollmentById(id)
                     )
             );
         } catch (RuntimeException e) {
@@ -64,7 +63,10 @@ public class EnrollmentController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<StudentEnrollment>> update(@PathVariable Long id, @RequestBody StudentEnrollment studentEnrollment) {
+    public ResponseEntity<ApiResponse<StudentEnrollment>> update(
+            @PathVariable Long id,
+            @RequestBody StudentEnrollment studentEnrollment
+    ) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
@@ -107,14 +109,14 @@ public class EnrollmentController {
 
     @PostMapping("/enroll-course")
     public ResponseEntity<ApiResponse<EnrollmentDetail>> enrollCourse
-            (@RequestBody EnrollCourseRequest enrollCourseRequest)
+            (@RequestBody StudentEnrollment studentEnrollment)
     {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
                             true,
                             "Enrollment successfully",
-                            enrollmentService.enrollCourse(enrollCourseRequest)
+                            enrollmentService.enrollCourse(studentEnrollment)
                     )
             );
         } catch (RuntimeException e) {

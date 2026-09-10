@@ -14,31 +14,38 @@ public class CourseService {
         this.courseRepository = courseRepository;
     }
 
-    public List<Course> getAllCourses() {
+    public List<Course> findAllCourses() {
         return courseRepository.findAll();
     }
 
-    public Course getCourseById(long id) {
+    public Course findCourseById(Long id) {
         return courseRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Course with id " + id + " not found!")
         );
     }
 
-    public long findMaxId() {
-        List<Course> courses = this.getAllCourses();
-        return courses.stream().mapToLong(Course::getId).max().orElse(0);
-    }
-
     public Course createCourse(Course course) {
-        course.setId(findMaxId() + 1);
-        return courseRepository.create(course);
+        return courseRepository.save(course);
     }
 
-    public Course updateCourse(long id, Course course) {
-        return courseRepository.update(id, course);
+    public Course updateCourse(Long id, Course course) {
+        Course existingCourse = courseRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Course with id " + id + " not found!")
+        );
+
+        existingCourse.setTitle(course.getTitle());
+        existingCourse.setStatus(course.getStatus());
+        existingCourse.setInstructor(course.getInstructor());
+
+        return courseRepository.save(existingCourse);
     }
 
-    public Course deleteCourseById(long id) {
-        return courseRepository.deleteById(id);
+    public Course deleteCourseById(Long id) {
+        Course existingCourse = courseRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Course with id " + id + " not found!")
+        );
+
+        courseRepository.delete(existingCourse);
+        return existingCourse;
     }
 }

@@ -1,50 +1,7 @@
 package com.example.asm01.repository;
 
 import com.example.asm01.model.Course;
-import com.example.asm01.model.CourseStatus;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-@Repository
-public class CourseRepository {
-    private final List<Course> courses = new ArrayList<>(List.of(
-            new Course(1L, "Java Fundamental - JDBC", CourseStatus.INACTIVE, 1L),
-            new Course(2L, "Java Spring Web - Restful API", CourseStatus.ACTIVE, 2L)
-    ));
-
-    public List<Course> findAll() {
-        return new ArrayList<>(courses);
-    }
-
-    public Optional<Course> findById(long id) {
-        return courses.stream().filter(c -> c.getId() == id).findFirst();
-    }
-
-    public Course create(Course course) {
-        courses.add(course);
-        return course;
-    }
-
-    public Course update(long id, Course course) {
-        Course existing = findById(id).orElseThrow(() ->
-                new RuntimeException("Course with id: " + id + " not found")
-        );
-
-        existing.setTitle(course.getTitle());
-        existing.setStatus(course.getStatus());
-        existing.setInstructorId(course.getInstructorId());
-        return existing;
-    }
-
-    public Course deleteById(long id) {
-        Course existing = findById(id).orElseThrow(() ->
-                new RuntimeException("Course with id: " + id + " not found")
-        );
-
-        courses.remove(existing);
-        return existing;
-    }
+public interface CourseRepository extends JpaRepository<Course, Long> {
 }

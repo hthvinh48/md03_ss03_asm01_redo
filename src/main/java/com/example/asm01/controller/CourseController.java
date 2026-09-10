@@ -20,7 +20,7 @@ public class CourseController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<Course>>> findAll() {
-        List<Course> courses = courseService.getAllCourses();
+        List<Course> courses = courseService.findAllCourses();
 
         ApiResponse<List<Course>> apiResponse = new ApiResponse<>(
                 true, "fetched courses successfully", courses
@@ -30,11 +30,11 @@ public class CourseController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ApiResponse<Course>> findById(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<Course>> findById(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
-                            true, "fetched course successfully", courseService.getCourseById(id)
+                            true, "fetched course successfully", courseService.findCourseById(id)
                     )
             );
         } catch (RuntimeException e) {
@@ -53,7 +53,7 @@ public class CourseController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ApiResponse<Course>> update(@PathVariable long id, @RequestBody Course course) {
+    public ResponseEntity<ApiResponse<Course>> update(@PathVariable Long id, @RequestBody Course course) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(
@@ -68,7 +68,7 @@ public class CourseController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ApiResponse<Course>> delete(@PathVariable long id) {
+    public ResponseEntity<ApiResponse<Course>> delete(@PathVariable Long id) {
         try {
             return ResponseEntity.ok(
                     new ApiResponse<>(

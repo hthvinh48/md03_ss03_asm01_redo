@@ -1,46 +1,49 @@
 package com.example.asm01.service;
 
+import com.example.asm01.dto.InstructorCreateRequest;
 import com.example.asm01.dto.InstructorDetail;
 import com.example.asm01.model.Course;
+import com.example.asm01.model.CourseStatus;
 import com.example.asm01.model.StudentEnrollment;
 import com.example.asm01.model.Instructor;
 import com.example.asm01.repository.CourseRepository;
-import com.example.asm01.repository.EnrollmentRepository;
+import com.example.asm01.repository.StudentEnrollmentRepository;
 import com.example.asm01.repository.InstructorRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 @Service
 public class InstructorService {
     private final InstructorRepository instructorRepository;
     private final CourseRepository courseRepository;
-    private final EnrollmentRepository enrollmentRepository;
+    private final StudentEnrollmentRepository studentEnrollmentRepository;
 
     public InstructorService(
             InstructorRepository instructorRepository,
             CourseRepository courseRepository,
-            EnrollmentRepository enrollmentRepository
+            StudentEnrollmentRepository studentEnrollmentRepository
     ) {
         this.instructorRepository = instructorRepository;
         this.courseRepository = courseRepository;
-        this.enrollmentRepository = enrollmentRepository;
+        this.studentEnrollmentRepository = studentEnrollmentRepository;
     }
 
-    public List<Instructor> getAllInstructors() {
+    public List<Instructor> findAllInstructors() {
         return instructorRepository.findAll();
     }
 
-    public Instructor getInstructorById(long id) {
-        return instructorRepository.findById(id).orElseThrow(() ->
-                new RuntimeException("Instructor with id " + id + " not found")
+    public Instructor findInstructorById(Long id) {
+        return instructorRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Instructor with id " + id + " not found")
         );
     }
 
     public List<InstructorDetail> getInstructorDetail() {
         List<Instructor> instructors = instructorRepository.findAll();
-        List<StudentEnrollment> studentEnrollments = enrollmentRepository.findAll();
+        List<StudentEnrollment> studentEnrollments = studentEnrollmentRepository.findAll();
         List<Course> courses = courseRepository.findAll();
 
         return instructors.stream().map(
@@ -48,15 +51,15 @@ public class InstructorService {
                     List<Course> validCourse = courses.stream()
                             .filter(course ->
                                     Objects.equals(
-                                            course.getInstructorId(),
+                                            course.getInstructor().getId(),
                                             instructor.getId()
                                     )
                             )
-                            .filter(course -> "ACTIVE".equals(course.getStatus()))
+                            .filter(course -> CourseStatus.ACTIVE.equals(course.getStatus()))
                             .filter(course -> studentEnrollments.stream().anyMatch(studentEnrollment ->
                                     Objects.equals(
                                             course.getId(),
-                                            studentEnrollment.getCourseId()
+                                            studentEnrollment.getCourse().getId()
                                         )
                                     )
                             ).toList();
@@ -71,21 +74,27 @@ public class InstructorService {
         ).toList();
     }
 
-    public long findMaxId() {
-        List<Instructor> instructors = this.getAllInstructors();
-        return instructors.stream().mapToLong(Instructor::getId).max().orElse(0);
+    public Instructor createInstructor(InstructorCreateRequest req) {
+        Instructor instructor = new Instructor();
+        instructor.setName(req.getName());
+        instructor.setEmail(req.getEmail());
+        return instructorRepository.save(instructor);
     }
 
-    public Instructor createInstructor(Instructor instructor) {
-        instructor.setId(findMaxId() + 1);
-        return instructorRepository.create(instructor);
+    public Instructor updateInstructor(Long id, Instructor instructor) {
+        Instructor existingInstructor = instructorRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Instructor with id " + id + " not found")
+        );
+        existingInstructor.setName(instructor.getName());
+        existingInstructor.setEmail(instructor.getEmail());
+        return instructorRepository.save(existingInstructor);
     }
 
-    public Instructor updateInstructor(long id, Instructor instructor) {
-        return instructorRepository.update(id, instructor);
-    }
-
-    public Instructor deleteInstructorById(long id) {
-        return instructorRepository.deleteById(id);
+    public Instructor deleteInstructorById(Long id) {
+        Instructor existingInstructor = instructorRepository.findById(id).orElseThrow(
+                () -> new RuntimeException("Instructor with id " + id + " not found")
+        );
+        instructorRepository.delete(existingInstructor);
+        return existingInstructor;
     }
 }

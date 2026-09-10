@@ -15,7 +15,7 @@ import lombok.Setter;
 public class StudentEnrollment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
 
     @JoinColumn(name = "student_id", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
