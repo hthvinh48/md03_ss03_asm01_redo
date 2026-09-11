@@ -1,6 +1,6 @@
 package com.example.asm01.service;
 
-import com.example.asm01.dto.InstructorCreateRequest;
+import com.example.asm01.dto.request.InstructorCreateRequest;
 import com.example.asm01.dto.InstructorDetail;
 import com.example.asm01.model.Course;
 import com.example.asm01.model.CourseStatus;
@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 
 @Service
 public class InstructorService {

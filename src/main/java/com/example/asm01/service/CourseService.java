@@ -1,51 +1,90 @@
 package com.example.asm01.service;
 
+import com.example.asm01.dto.request.CourseCreateRequest;
+import com.example.asm01.dto.request.CourseUpdateRequest;
 import com.example.asm01.model.Course;
+import com.example.asm01.model.Instructor;
 import com.example.asm01.repository.CourseRepository;
+import com.example.asm01.repository.InstructorRepository;
+import com.example.asm01.dto.response.CourseResponse;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CourseService {
     private final CourseRepository courseRepository;
+    private final InstructorRepository instructorRepository;
 
-    public CourseService(CourseRepository courseRepository) {
+    public CourseService(
+            CourseRepository courseRepository,
+            InstructorRepository instructorRepository
+    ) {
         this.courseRepository = courseRepository;
+        this.instructorRepository = instructorRepository;
     }
 
-    public List<Course> findAllCourses() {
-        return courseRepository.findAll();
+    public List<CourseResponse> findAllCourses() {
+        return courseRepository.findAll().stream().map(
+                course -> {
+                    CourseResponse courseResponse = new CourseResponse();
+                    courseResponse.setId(course.getId());
+                    courseResponse.setTitle(course.getTitle());
+                    courseResponse.setInstructorName(course.getInstructor().getName());
+                    courseResponse.setStatus(course.getStatus());
+                    return courseResponse;
+                }
+        ).toList();
     }
 
-    public Course findCourseById(Long id) {
-        return courseRepository.findById(id).orElseThrow(() ->
+    public CourseResponse findCourseById(Long id) {
+        Course existing = courseRepository.findById(id).orElseThrow(() ->
                 new RuntimeException("Course with id " + id + " not found!")
+        );
+
+        return new CourseResponse(
+                existing.getId(),
+                existing.getTitle(),
+                existing.getStatus(),
+                existing.getInstructor().getName()
         );
     }
 
-    public Course createCourse(Course course) {
-        return courseRepository.save(course);
+    public void createCourse(CourseCreateRequest req) {
+        Course newCourse = new Course();
+        Instructor instructor = instructorRepository.findById(req.getInstructorId()).orElseThrow(
+                () -> new RuntimeException("Instructor " + req.getInstructorId() + " not found!")
+        );
+
+        newCourse.setTitle(req.getTitle());
+        newCourse.setStatus(req.getStatus());
+        newCourse.setInstructor(instructor);
+        courseRepository.save(newCourse);
     }
 
-    public Course updateCourse(Long id, Course course) {
+    public void updateCourse(Long id, CourseUpdateRequest req) {
         Course existingCourse = courseRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Course with id " + id + " not found!")
         );
 
-        existingCourse.setTitle(course.getTitle());
-        existingCourse.setStatus(course.getStatus());
-        existingCourse.setInstructor(course.getInstructor());
+        Instructor existingInstructor = Objects.equals(
+                existingCourse.getInstructor().getId(), req.getInstructorId()) ?
+                existingCourse.getInstructor() : instructorRepository.findById(req.getInstructorId()).orElseThrow(
+                        () -> new RuntimeException("Instructor " + req.getInstructorId() + " not found!")
+                );
 
-        return courseRepository.save(existingCourse);
+        existingCourse.setTitle(req.getTitle());
+        existingCourse.setStatus(req.getStatus());
+        existingCourse.setInstructor(existingInstructor);
+        courseRepository.save(existingCourse);
     }
 
-    public Course deleteCourseById(Long id) {
+    public void deleteCourseById(Long id) {
         Course existingCourse = courseRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Course with id " + id + " not found!")
         );
 
         courseRepository.delete(existingCourse);
-        return existingCourse;
     }
 }

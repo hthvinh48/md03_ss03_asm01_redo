@@ -1,4 +1,4 @@
-package com.example.asm01.dto;
+package com.example.asm01.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EnrollmentDetail {
-    private long id;
-    private String studentName;
-    private String courseName;
+public class ApiResponse<T> {
+    private boolean success;
+    private String message;
+    private T data;
 }

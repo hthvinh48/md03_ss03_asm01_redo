@@ -1,16 +1,15 @@
-package com.example.asm01.dto;
+package com.example.asm01.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
-public class EnrollCourseRequest {
-    Long id;
-    String studentName;
-    Long courseId;
+public class InstructorCreateRequest {
+    private String name;
+    private String email;
 }

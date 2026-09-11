@@ -1,6 +1,5 @@
 package com.example.asm01.service;
 
-import com.example.asm01.dto.EnrollCourseRequest;
 import com.example.asm01.dto.EnrollmentDetail;
 import com.example.asm01.model.Course;
 import com.example.asm01.model.CourseStatus;
@@ -60,7 +59,7 @@ public class EnrollmentService {
         return new EnrollmentDetail(
                 saveStudentEnrollment.getId(),
                 saveStudentEnrollment.getStudent().getName(),
-                existing
+                existing.getTitle()
         );
     }
 

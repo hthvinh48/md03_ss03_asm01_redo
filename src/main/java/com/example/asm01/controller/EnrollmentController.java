@@ -2,8 +2,9 @@ package com.example.asm01.controller;
 
 import com.example.asm01.dto.EnrollmentDetail;
 import com.example.asm01.model.StudentEnrollment;
-import com.example.asm01.response.ApiResponse;
+import com.example.asm01.dto.response.ApiResponse;
 import com.example.asm01.service.EnrollmentService;
+import com.example.asm01.service.StudentEnrollmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,18 +15,20 @@ import java.util.List;
 @RequestMapping("/api/v1/enrollments")
 public class EnrollmentController {
     private final EnrollmentService enrollmentService;
+    private final StudentEnrollmentService studentEnrollmentService;
 
-    public EnrollmentController(EnrollmentService enrollmentService) {
+    public EnrollmentController(EnrollmentService enrollmentService, StudentEnrollmentService studentEnrollmentService) {
         this.enrollmentService = enrollmentService;
+        this.studentEnrollmentService = studentEnrollmentService;
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<StudentEnrollment>>> findAll() {
+    public ResponseEntity<ApiResponse<List<EnrollmentDetail>>> findAll() {
         return ResponseEntity.ok(
                 new ApiResponse<>(
                         true,
                         "fetched data successfully",
-                        enrollmentService.findAllEnrollments()
+                        studentEnrollmentService.findAllStudentEnrollments()
                 )
         );
     }
@@ -52,15 +55,27 @@ public class EnrollmentController {
     }
 
     @PostMapping
-    public ResponseEntity<ApiResponse<StudentEnrollment>> save(@RequestBody StudentEnrollment studentEnrollment) {
-        return ResponseEntity.ok(
-                new ApiResponse<>(
-                        true,
-                        "create new enrollment successfully",
-                        enrollmentService.createEnrollment(studentEnrollment)
-                )
-        );
+    public ResponseEntity<ApiResponse<Void>> createStudentEnrollment(
+            @RequestBody StudentEnrollment studentEnrollment
+    ) {
+        try {
+            return ResponseEntity.ok(
+                    new ApiResponse<>(
+                            true,
+                            studentEnrollmentService.enrollStudent(
+                                studentEnrollment.getStudent().getId(),
+                                studentEnrollment.getCourse().getId()
+                            ),
+                            null
+                    )
+            );
+        } catch (RuntimeException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(
+                    new ApiResponse<>(false, e.getMessage(), null)
+            );
+        }
     }
+
 
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<StudentEnrollment>> update(
